@@ -118,7 +118,7 @@ You can open the project in Expo Go to skim the **timer UI only**. Camera face d
 | `VIBRATE` | Android | Distraction alert pattern. |
 | `NSCameraUsageDescription` | iOS (future) | Camera usage string. |
 
-Declared in `app.json` plugins / `android.permissions`. The app requests camera permission at runtime before starting a monitored session.
+Declared in `app.json` → `ios.infoPlist` / `android.permissions` (Vision Camera **v5 has no Expo config plugin** — do not list it under `plugins`). The app requests camera permission at runtime before starting a monitored session.
 
 ## UI direction
 

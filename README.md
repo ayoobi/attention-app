@@ -81,7 +81,9 @@ docs/focus-app-plan.md  Architecture and known limits
 ## Stack
 
 - Expo SDK 58 (managed) + `expo-dev-client`
-- `react-native-vision-camera` + `react-native-vision-camera-face-detector` (ML Kit)
+- `react-native-vision-camera` **5.2.3** + `react-native-vision-camera-face-detector` **2.1.0** (ML Kit) + Nitro (`react-native-nitro-modules` **0.37.1**, `react-native-nitro-image` **0.15.2**)
 - `expo-av` (alert sound), `expo-haptics` / `Vibration`
+
+**Vision Camera v5 has no Expo config plugin.** Camera permission text lives in `app.json` → `ios.infoPlist` / `android.permissions` (do not add `react-native-vision-camera` under `plugins` — Expo would load the package main entry and fail with `Cannot find module '.../lib/CameraDevices'`).
 
 See [`docs/focus-app-plan.md`](docs/focus-app-plan.md) for architecture and known limits.
