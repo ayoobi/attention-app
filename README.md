@@ -73,7 +73,8 @@ App.tsx                 UI shell
 src/hooks/              Timer + alert logic
 src/components/         Timer, controls, face monitor
 assets/alert.wav        Alert tone
-app.json                Permissions + Vision Camera plugin
+app.json                Permissions + Expo config plugins
+plugins/                Android Gradle 9.4.1 pin (prebuild)
 eas.json                preview / development APK profiles
 docs/focus-app-plan.md  Architecture and known limits
 ```
