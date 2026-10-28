@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "More Attention",
+    "slug": "more-attention-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "moreattention",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1C19"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.moreattention.focus",
+      "infoPlist": {
+        "NSCameraUsageDescription": "More Attention uses the rear camera to confirm you are facing your computer during a focus session.",
+        "NSMicrophoneUsageDescription": "Microphone is unused; permission may be requested by the camera module."
+      }
+    },
+    "android": {
+      "package": "app.moreattention.focus",
+      "adaptiveIcon": {
+        "backgroundColor": "#1A1C19",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.VIBRATE",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-dev-client",
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "More Attention uses the rear camera to confirm you are facing your computer during a focus session.",
+          "enableMicrophonePermission": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
