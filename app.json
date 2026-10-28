@@ -39,14 +39,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-dev-client",
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "More Attention uses the rear camera to confirm you are facing your computer during a focus session.",
-          "enableMicrophonePermission": false
-        }
-      ]
+      "expo-dev-client"
     ],
     "experiments": {
       "typedRoutes": false
