@@ -27,39 +27,71 @@ function upsertGradleProperty(items, key, value) {
 }
 
 /**
+ * AGP 9 rejects getDefaultProguardFile('proguard-android.txt'). Rewrite the
+ * default ProGuard file argument (and any `proguardDefaultFile` assignment) to
+ * `proguard-android-optimize.txt` in android/app/build.gradle.
+ * @param {string} contents
+ * @returns {string}
+ */
+function rewriteProguardDefaultFile(contents) {
+  let next = contents.replace(
+    /getDefaultProguardFile\(\s*(['"])proguard-android\.txt\1\s*\)/g,
+    'getDefaultProguardFile($1proguard-android-optimize.txt$1)'
+  );
+  // Variable form used by some templates / local edits, e.g.
+  // def proguardDefaultFile = "proguard-android.txt"
+  next = next.replace(
+    /(proguardDefaultFile\s*=\s*)(['"])proguard-android\.txt\2/g,
+    '$1$2proguard-android-optimize.txt$2'
+  );
+  return next;
+}
+
+/**
  * Pins Android Gradle Wrapper to 9.4.1 (required by RN 0.88 / AGP), removes
  * unsupported `newArchEnabled=false`, and opts out of AGP 9 built-in Kotlin /
  * new DSL so Expo/RN/Vision Camera can keep applying
  * `org.jetbrains.kotlin.android` without the duplicate `kotlin` extension error.
  *
- * Also disables Jetifier (AndroidX-only; Jetifier is deprecated).
+ * Also disables Jetifier (AndroidX-only; Jetifier is deprecated) and rewrites
+ * the AGP 9–unsupported ProGuard default file to `proguard-android-optimize.txt`.
  */
 function withAndroidGradle941(config) {
   config = withDangerousMod(config, [
     'android',
     async (cfg) => {
+      const root = cfg.modRequest.platformProjectRoot;
       const wrapperPath = path.join(
-        cfg.modRequest.platformProjectRoot,
+        root,
         'gradle',
         'wrapper',
         'gradle-wrapper.properties'
       );
-      if (!fs.existsSync(wrapperPath)) {
-        return cfg;
+      if (fs.existsSync(wrapperPath)) {
+        const original = fs.readFileSync(wrapperPath, 'utf8');
+        let next = original;
+        if (/^distributionUrl=.+$/m.test(next)) {
+          next = next.replace(
+            /^distributionUrl=.+$/m,
+            `distributionUrl=${DISTRIBUTION_URL}`
+          );
+        } else {
+          next = `${next.trimEnd()}\ndistributionUrl=${DISTRIBUTION_URL}\n`;
+        }
+        if (next !== original) {
+          fs.writeFileSync(wrapperPath, next);
+        }
       }
-      const original = fs.readFileSync(wrapperPath, 'utf8');
-      let next = original;
-      if (/^distributionUrl=.+$/m.test(next)) {
-        next = next.replace(
-          /^distributionUrl=.+$/m,
-          `distributionUrl=${DISTRIBUTION_URL}`
-        );
-      } else {
-        next = `${next.trimEnd()}\ndistributionUrl=${DISTRIBUTION_URL}\n`;
+
+      const appGradlePath = path.join(root, 'app', 'build.gradle');
+      if (fs.existsSync(appGradlePath)) {
+        const original = fs.readFileSync(appGradlePath, 'utf8');
+        const next = rewriteProguardDefaultFile(original);
+        if (next !== original) {
+          fs.writeFileSync(appGradlePath, next);
+        }
       }
-      if (next !== original) {
-        fs.writeFileSync(wrapperPath, next);
-      }
+
       return cfg;
     },
   ]);
@@ -94,5 +126,5 @@ function withAndroidGradle941(config) {
 module.exports = createRunOncePlugin(
   withAndroidGradle941,
   'withAndroidGradle941',
-  '1.1.0'
+  '1.2.0'
 );

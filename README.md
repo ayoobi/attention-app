@@ -74,7 +74,7 @@ src/hooks/              Timer + alert logic
 src/components/         Timer, controls, face monitor
 assets/alert.wav        Alert tone
 app.json                Permissions + Expo config plugins
-plugins/                Android Gradle 9.4.1 + AGP9 Kotlin opt-outs (prebuild)
+plugins/                Android Gradle 9.4.1 + AGP9 Kotlin/ProGuard fixes (prebuild)
 eas.json                preview / development APK profiles
 docs/focus-app-plan.md  Architecture and known limits
 ```
